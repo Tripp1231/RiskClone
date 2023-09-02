@@ -1,0 +1,27 @@
+      (Ordered by importance)
+           TO DO BOARD
+    Fork to change what is contained within our pairs
+        A Player Object should be contained in the .first so that they can be edited
+        Make attacking easier, makes losing and winning more clear
+    Winning/Losing/Game-ending needs to be implemented
+    PrintBoard() gets ugly quick
+        Fix it so it looks better line to line even if they contain varying numbers
+    Figure out how to clear the console in CLion it looks terrible after a while
+    Risk Card system needs implementation
+
+
+             FUN IDEA BOARD
+    Implementing a "fog of war"
+        Making is so that only immediately/+2/+3 adjacent tiles are visible to player
+            Requires unique Map vision depending on the player
+            Map is going to have to be larger
+    Implementing "Terrain"
+        Terrain would make places uncrossable or inaccesible universally
+        Could be pretty easy to implement
+        Random or purposefully built?
+    Reworking Risks attacking system to reward aggression
+        Coin Flipping, troops are rewarded at the end of a turn not the beginning
+            Fundamentally changes Risk
+    How could an Adjacency matrix be used/is it better to use it?
+    Implementing different Factions
+        Child of Player.h?

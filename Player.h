@@ -14,8 +14,6 @@ const int STAND_ROW = 3;
 const int STAND_COL = 3;
 
 
-////TO DO: DO I MAKE ERROR MESSAGES HAPPEN WITHIN THE FUNCTIONS TO MAKE IT MORE CLEAR WHERE WE ARE FAILING?
-////CHECK ADJACENCY CANT BE MENTIONED IN FORTIFY
 
 ////TO DO: MAKE printBoard() PRETTY!!
 void printBoard(pair<int, int> **  & Board){
@@ -370,7 +368,6 @@ public:
         int col_2;
         int amount;
         int player_choice;
-        bool turn_active;
 
         cout << "Player #"<< player_num << ", Fortify [1] or End Fortify Phase [3]" << endl;
         cin >> player_choice;
@@ -406,4 +403,4 @@ public:
 
 
 
-#endif //RISKCLONE_PLAYER_H
+#endif RISKCLONE_PLAYER_H
