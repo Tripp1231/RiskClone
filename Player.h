@@ -131,11 +131,11 @@ private:
         }
         //Preliminary Check to make sure that coords are even valid
 
-        if(!CheckIfValid(cur_row, cur_col)){ //||Board[cur_row][cur_col].second == TEMP){//There might be a problem here with the or
+        if(!CheckIfValid(cur_row, cur_col)){ //||Board[cur_row][cur_col].second == TEMP){
             return false;
         }
 
-        if (Board[cur_row][cur_col].first == TEMP || Board[cur_row][cur_col].first == PATH){//Should this be change to also if its a path? How would that owrk?
+        if (Board[cur_row][cur_col].first == TEMP || Board[cur_row][cur_col].first == PATH){
             cout << "Remove Backtracking? May need to get rid of second half of if header" << endl;
             return false;
         }
@@ -307,9 +307,6 @@ public:
 
         printBoard(Board);
 
-
-        //This is a comment and some spaces to test branching
-        //Testing a commit in a branch but not in main
     }
 
     void PlayerAttack(pair <int, int> ** & Board){
