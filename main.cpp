@@ -7,10 +7,8 @@ using namespace std;
 
 
 int main(){
-    //ok looking to see if this is also in main
-    //fwab
     //Do we need this to by dynamically allocated or can this just be handled by vectors?
-    //pair <int, Player> ** Board_player;
+    //pair <Player, int> ** Board_player;
     pair <int,int> ** Board;
     int total_provinces = STAND_ROW * STAND_COL;
 
