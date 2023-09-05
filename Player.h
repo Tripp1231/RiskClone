@@ -92,7 +92,7 @@ private:
         cerr << "There are not enough troops to attack." << endl;
         return false;
     }
-
+//THIS IS BUGGED HOLY
     bool CheckIfExistingPath(int first_row, int first_col, int second_row, int second_col, pair <int, int> ** Board){
         //Cant reinforce to the same exact province
         //check CheckIfBothOwner()
@@ -121,9 +121,10 @@ private:
             return CheckPathHelper(first_row, first_col, second_row, second_col, flag, Board);
         }
     }
-
+//THESE ARE BUGGED
     bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, pair<int, int> ** Board){
         //Make sure depth first?
+
 
         if (flag){
             cout << "flag case hit!" << endl;
@@ -136,10 +137,8 @@ private:
         }
 
         if (Board[cur_row][cur_col].first == TEMP || Board[cur_row][cur_col].first == PATH){
-            cout << "Remove Backtracking? May need to get rid of second half of if header" << endl;
             return false;
         }
-
 
         //Makes sure that we aren't recursing off of enemy provinces
         if(!CheckIfSingleAllied(cur_row, cur_col, Board)){
