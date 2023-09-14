@@ -23,7 +23,7 @@ class Player{
 
 private:
 
-    void printBoard(pair<Player, int> **  & Board){
+    void printBoard(vector<vector <pair <Player *, int>>> & Board) const{
         // printing the col key:
         cout << " ";
         for (int i = 0; i < STAND_COL; i++){
@@ -34,7 +34,7 @@ private:
         for (int i = 0; i < STAND_ROW; i++){
             cout << "[" << i << "]";
             for(int j = 0; j < STAND_COL; j++){
-                cout << "   <" << Board[i][j].first.toInt() << "," << Board[i][j].second << "> ";
+                cout << "   <" << Board[i][j].first->toInt() << "," << Board[i][j].second << "> ";
             }
             cout << endl;
         }
@@ -49,15 +49,15 @@ private:
         }
     }
 
-    bool CheckIfTargetIsUnoccupied(int check_row, int check_col, pair <Player, int> ** & Board) const {
-        if(Board[check_row][check_col].first == 0){
+    bool CheckIfTargetIsUnoccupied(int check_row, int check_col, vector<vector <pair <Player *, int>>> & Board) const {
+        if(Board[check_row][check_col].first->toInt() == 0){
             return true;
         }
         return false;
     }
 
-    bool CheckIfSingleAllied(int player_row, int player_col, pair <int,int> ** &  Board ) const {
-        if(Board[player_row][player_col].first == player_num){
+    bool CheckIfSingleAllied(int player_row, int player_col, vector<vector <pair <Player *, int>>> & Board) const {
+        if(Board[player_row][player_col].first == this){
             return true;
         }
         return false;
@@ -78,10 +78,10 @@ private:
         return false;
     }
 
-    bool CheckIfBothOwner(int player_row, int player_col, int check_row, int check_col, pair <int, int> ** & Board) const {
+    bool CheckIfBothOwner(int player_row, int player_col, int check_row, int check_col, vector<vector <pair <Player *, int>>> & Board) const {
         //you can use this to both check if it's an "allied" province or if it's an enemy province
         //Useful for Phase 3 of fortifying
-        if(Board[player_row][player_col].first == Board[check_row][check_col].first){
+        if(Board[player_row][player_col].first == this){
             return true;
         }
         return false;
@@ -95,7 +95,7 @@ private:
         return false;
     }
 //THIS IS BUGGED HOLY
-    bool CheckIfExistingPath(int first_row, int first_col, int second_row, int second_col, pair <int, int> ** Board){
+    bool CheckIfExistingPath(int first_row, int first_col, int second_row, int second_col, vector<vector <pair <Player *, int>>> & Board){
         //Cant reinforce to the same exact province
         //check CheckIfBothOwner()
         //Make more efficient just by checking to see if theyre directly adjacent first
@@ -123,8 +123,9 @@ private:
             return CheckPathHelper(first_row, first_col, second_row, second_col, flag, Board);
         }
     }
+
 //THESE ARE BUGGED
-    bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, pair<int, int> ** Board){
+    bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, vector<vector <pair <Player *, int>>> & Board){
         //Make sure depth first?
 
         if (flag){
@@ -217,16 +218,16 @@ public:
 
     ~Player(){}
 
-    bool operator==(Player rhs){
-        if (player_num == rhs.player_num){
+    bool operator==(Player &rhs){
+        if (this == &rhs){
             return true;
         }
         return false;
     }
 
-    Player  operator =(Player const&) const {
-        return *this;
-    }
+//    Player  operator =(Player const&) const {
+//        return *this;
+//    }
 
     int toInt() const {
         return player_num;
@@ -238,7 +239,7 @@ public:
         return ss.str();
     }
 
-    void GameStartDeploy(int & total_provinces, pair<Player, int> ** & Board){
+    void GameStartDeploy(int & total_provinces, vector<vector <pair <Player *, int>>> & Board){
         bool deployment = true;
         int player_row;
         int player_col;
@@ -250,7 +251,7 @@ public:
 
             if (CheckIfValid(player_row, player_col) && CheckIfTargetIsUnoccupied(player_row, player_col, Board)) {
                 //If the Province targeted is unoccupied
-                Board[player_row][player_col].first = ;
+                Board[player_row][player_col].first = this;
                 Board[player_row][player_col].second += 1;
                 troop_deploy--;
                 total_provinces--;
@@ -263,7 +264,7 @@ public:
         printBoard(Board);
     }
 
-    void TakeTurn(pair <Player, int> ** & Board){
+    void TakeTurn(vector<vector <pair <Player *, int>>> & Board){
         CollectTroops();
 
         //Deploying Troops
@@ -280,7 +281,7 @@ public:
         cout<< "End of Player #" << player_num <<"'s turn." << endl;
     }
 
-    void DeployTroops(pair <int, int> ** & Board){
+    void DeployTroops(vector<vector <pair <Player *, int>>> & Board){
         int player_in_row;
         int player_in_col;
         int player_in_troops;
@@ -369,48 +370,48 @@ public:
         //Figure out how to clear the terminal
         //"End of Player player_num turn"
         //clear()
-        //printBoard(Board);
+        printBoard(Board);
 
 
     }
 
-    void PlayerFortify(pair <int, int> ** & Board){
-//// ACTUALLY IMPLEMENT THIS
-        int row_1;
-        int col_1;
-        int row_2;
-        int col_2;
-        int amount;
-        int player_choice;
-
-        cout << "Player #"<< player_num << ", Fortify [1] or End Fortify Phase [3]" << endl;
-        cin >> player_choice;
-
-        while(player_choice == 1) {
-            cout << "Please select two provinces that you own and are connected to fortify. Ex. 1 1 3 1"<< endl;
-            cin >> row_1 >> col_1 >> row_2 >> col_2;
-
-            if (CheckIfExistingPath(row_1, col_1, row_2, col_2, Board)) {
-                cout << "Choose the amount of troops you want to move." << endl;
-                cout << "(You must leave 1 troop at the first province.)" << endl;
-                cin >> amount;
-
-                if (ValidTroopMove(row_1, col_1, amount, Board)){
-                    Board[row_2][col_2].second += amount;
-                    Board[row_1][col_1].second -= amount;
-                }
-                else{
-                    Board[row_2][col_2].second += (Board[row_1][col_1].second - 1);
-                    Board[row_1][col_1].second = 1;
-                }
-                player_choice = -1;
-            }
-            else {
-                cout << "There does not exist a path between those provinces or another error occurred." << endl;
-            }
-        }
-    }
-
+//    void PlayerFortify(pair <int, int> ** & Board){
+////// ACTUALLY IMPLEMENT THIS
+//        int row_1;
+//        int col_1;
+//        int row_2;
+//        int col_2;
+//        int amount;
+//        int player_choice;
+//
+//        cout << "Player #"<< player_num << ", Fortify [1] or End Fortify Phase [3]" << endl;
+//        cin >> player_choice;
+//
+//        while(player_choice == 1) {
+//            cout << "Please select two provinces that you own and are connected to fortify. Ex. 1 1 3 1"<< endl;
+//            cin >> row_1 >> col_1 >> row_2 >> col_2;
+//
+//            if (CheckIfExistingPath(row_1, col_1, row_2, col_2, Board)) {
+//                cout << "Choose the amount of troops you want to move." << endl;
+//                cout << "(You must leave 1 troop at the first province.)" << endl;
+//                cin >> amount;
+//
+//                if (ValidTroopMove(row_1, col_1, amount, Board)){
+//                    Board[row_2][col_2].second += amount;
+//                    Board[row_1][col_1].second -= amount;
+//                }
+//                else{
+//                    Board[row_2][col_2].second += (Board[row_1][col_1].second - 1);
+//                    Board[row_1][col_1].second = 1;
+//                }
+//                player_choice = -1;
+//            }
+//            else {
+//                cout << "There does not exist a path between those provinces or another error occurred." << endl;
+//            }
+//        }
+//    }
+//
 };
 
 
