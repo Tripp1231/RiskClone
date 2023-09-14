@@ -15,28 +15,30 @@ const int STAND_COL = 3;
 
 
 
-////TO DO: MAKE printBoard() PRETTY!!
-void printBoard(pair<int, int> **  & Board){
-    // printing the col key:
-    cout << " ";
-    for (int i = 0; i < STAND_COL; i++){
-        cout << "      " << "[" << i << "]" << "";
-    }
-    cout << endl;
+////     TO DO: MAKE printBoard() PRETTY!!
 
-    for (int i = 0; i < STAND_ROW; i++){
-        cout << "[" << i << "]";
-        for(int j = 0; j < STAND_COL; j++){
-            cout << "   <" << Board[i][j].first << "," << Board[i][j].second << "> ";
-        }
-        cout << endl;
-    }
-}
 
 
 class Player{
 
 private:
+
+    void printBoard(pair<Player, int> **  & Board){
+        // printing the col key:
+        cout << " ";
+        for (int i = 0; i < STAND_COL; i++){
+            cout << "      " << "[" << i << "]" << "";
+        }
+        cout << endl;
+
+        for (int i = 0; i < STAND_ROW; i++){
+            cout << "[" << i << "]";
+            for(int j = 0; j < STAND_COL; j++){
+                cout << "   <" << Board[i][j].first.toInt() << "," << Board[i][j].second << "> ";
+            }
+            cout << endl;
+        }
+    }
 
     void CollectTroops(){
         if (my_pairs.size() / 3 > BASE_TROOP_INCOME ){
@@ -47,7 +49,7 @@ private:
         }
     }
 
-    bool CheckIfTargetIsUnoccupied(int check_row, int check_col, pair <int, int> ** & Board) const {
+    bool CheckIfTargetIsUnoccupied(int check_row, int check_col, pair <Player, int> ** & Board) const {
         if(Board[check_row][check_col].first == 0){
             return true;
         }
@@ -125,13 +127,12 @@ private:
     bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, pair<int, int> ** Board){
         //Make sure depth first?
 
-
         if (flag){
             cout << "flag case hit!" << endl;
             return true;
         }
-        //Preliminary Check to make sure that coords are even valid
 
+        //Preliminary Check to make sure that coords are even valid
         if(!CheckIfValid(cur_row, cur_col)){ //||Board[cur_row][cur_col].second == TEMP){
             return false;
         }
@@ -165,9 +166,6 @@ private:
             Board[cur_row][cur_col].first = TEMP;
             return false;
         }
-
-
-
     }
 
     bool ValidTroopMove(int row_1, int col_1, int amount, pair <int, int>  ** & Board) const{
@@ -198,24 +196,41 @@ private:
 
     int const BASE_TROOP_INCOME = 3;
 
-
 public:
     int player_num = 0;
     int troop_deploy = 35;
-    unordered_set<pair <int, int> *> my_pairs;
+    unordered_set<pair <Player, int> *> my_pairs;
     const int PATH = player_num + 10;
     const int TEMP = player_num - 10;
 
 
-    Player(int player_slot, int player_count){//int faction
+    Player(int player_slot=0, int player_count=0){//int faction
         player_num = player_slot;
         //faction_choice = faction;
         for (int i = 3; i < player_count; i++){
             troop_deploy -= 5;
         }
+        if (player_count == 0){
+            troop_deploy = 0;
+        }
     }
 
     ~Player(){}
+
+    bool operator==(Player rhs){
+        if (player_num == rhs.player_num){
+            return true;
+        }
+        return false;
+    }
+
+    Player  operator =(Player const&) const {
+        return *this;
+    }
+
+    int toInt() const {
+        return player_num;
+    }
 
     string toString() const{
         stringstream ss;
@@ -223,7 +238,7 @@ public:
         return ss.str();
     }
 
-    void GameStartDeploy(int & total_provinces, pair<int, int> ** & Board){
+    void GameStartDeploy(int & total_provinces, pair<Player, int> ** & Board){
         bool deployment = true;
         int player_row;
         int player_col;
@@ -235,7 +250,7 @@ public:
 
             if (CheckIfValid(player_row, player_col) && CheckIfTargetIsUnoccupied(player_row, player_col, Board)) {
                 //If the Province targeted is unoccupied
-                Board[player_row][player_col].first = player_num;
+                Board[player_row][player_col].first = ;
                 Board[player_row][player_col].second += 1;
                 troop_deploy--;
                 total_provinces--;
@@ -248,17 +263,17 @@ public:
         printBoard(Board);
     }
 
-    void TakeTurn(pair <int, int> ** & Board){
+    void TakeTurn(pair <Player, int> ** & Board){
         CollectTroops();
 
         //Deploying Troops
-        DeployTroops(Board);
+        //DeployTroops(Board);
 
         //Attacking Enemy Provinces
-        PlayerAttack(Board);
+        //PlayerAttack(Board);
 
         //Fortifying Allied Provinces
-        PlayerFortify(Board);
+        //PlayerFortify(Board);
 
         printBoard(Board);
 
@@ -304,7 +319,7 @@ public:
 
         }
 
-        printBoard(Board);
+        //printBoard(Board);
 
     }
 
@@ -337,7 +352,7 @@ public:
                 Board[enemy_row][enemy_col].first = player_num;
 
                 cout << "Player #" << player_num << " has taken over [" << enemy_row << "] [" << enemy_col << "]!" << endl;
-                printBoard(Board);
+                //printBoard(Board);
 
 
             }
@@ -354,7 +369,7 @@ public:
         //Figure out how to clear the terminal
         //"End of Player player_num turn"
         //clear()
-        printBoard(Board);
+        //printBoard(Board);
 
 
     }
