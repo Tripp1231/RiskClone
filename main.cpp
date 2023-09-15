@@ -79,10 +79,12 @@ int main(){
         players_in_game[i].DeployTroops(Board);
     }
 
+    players_in_game[0].TakeTurn(Board);
+
     printBoard(Board);
 
     //Main Game Loop
-//    while (true){//This is gonna change, much more concrete game ending cons
+//    while (true){
 //        for (int i = 0; i < players_in_game.size(); i++){
 //            players_in_game[i].TakeTurn(Board);
 //        }
