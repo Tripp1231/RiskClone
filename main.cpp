@@ -3,40 +3,39 @@
 #include <string>
 #include <utility>
 #include "Player.h"
+#include <iomanip>
 using namespace std;
-//REMEMBER TO FIX IF NEEDED
 
-
-void printBoard(vector<vector <pair <Player *, int> > > & Board){
-    // printing the col key:
-    cout << " ";
-    for (int i = 0; i < STAND_COL; i++){
-        cout << "      " << "[" << i << "]" << "";
-    }
-    cout << endl;
-
-    for (int i = 0; i < STAND_ROW; i++){
-        cout << "[" << i << "]";
-        for(int j = 0; j < STAND_COL; j++){
-            cout << "   <" << Board[i][j].first->toInt() << "," << Board[i][j].second << "> ";
+void printBoard(vector<vector <pair <Player *, int>>> & Board){
+        cout << setw(9) << "[" << 0 << "]";// Orig: 9
+        int stand_num = 8; //orig: 8
+        cout << setw(0);
+        for(int i = 1; i < STAND_COL; i++){
+            cout << setw(stand_num) << "[" << i << "]";
         }
-        cout << endl;
+
+    cout << endl;
+    for(int i = 0; i < STAND_ROW; i++){
+       cout<< setw(0) << "[" << i << "]";
+        for(int j = 0; j <STAND_COL; j++){
+            cout<< setw(4) << "{" << Board[i][j].first -> toInt() << " " << setw(3)<< Board[i][j].second << "}";//Orig1: 4
+                                                                                                                      //Orig2: 3
+        }
+        cout << endl<<endl;
     }
 }
 
-//Here begins the great change!!
 int main(){
 
-    vector<vector <pair <Player *, int> > > Board;
+    vector<vector <pair <Player *, int>>> Board;
 
     Player * def_player = new Player(0,0);
-
 
     int total_provinces = STAND_ROW * STAND_COL;
 
     cout << "Generating Game Board..." << endl;
     for(int i=0; i< STAND_ROW; i++) {
-        Board.push_back(vector<pair<Player *, int> >());
+        Board.push_back(vector<pair<Player *, int>>());
         for (int j = 0; j < STAND_COL; j++) {
             Board[i].push_back(make_pair(def_player, 0));
         }
@@ -44,6 +43,7 @@ int main(){
 
     printBoard(Board);
 
+    //Temporary Comment out to test printboard
     cout << "How many players?: " << endl;
     int num_players;
     cin >> num_players;
@@ -61,7 +61,6 @@ int main(){
         Player new_player(i + 1, num_players);
         players_in_game.push_back(new_player);
     }
-
 
 
     //Initial Deployment of Troops

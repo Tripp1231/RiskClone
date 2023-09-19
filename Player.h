@@ -10,6 +10,8 @@ using namespace std;
 #include <vector>
 #include <set>
 #include <unordered_set>
+#include <iomanip>
+
 const int STAND_ROW = 4;
 const int STAND_COL = 4;
 
@@ -18,18 +20,20 @@ class Player{
 
 private:
 
-    void printBoard(vector<vector <pair <Player *, int> > > & Board) const{
-        // printing the col key:
-        cout << " ";
-        for (int i = 0; i < STAND_COL; i++){
-            cout << "      " << "[" << i << "]" << "";
+    void printBoard(vector<vector <pair <Player *, int>>> & Board){
+        cout << setw(9) << "[" << 0 << "]";// Orig: 9
+        int stand_num = 8; //orig: 8
+        cout << setw(0);
+        for(int i = 1; i < STAND_COL; i++){
+            cout << setw(stand_num) << "[" << i << "]";
         }
-        cout << endl;
 
-        for (int i = 0; i < STAND_ROW; i++){
-            cout << "[" << i << "]";
-            for(int j = 0; j < STAND_COL; j++){
-                cout << "   <" << Board[i][j].first->toInt() << "," << Board[i][j].second << "> ";
+        cout << endl;
+        for(int i = 0; i < STAND_ROW; i++){
+            cout<< setw(0) << "[" << i << "]";
+            for(int j = 0; j <STAND_COL; j++){
+                cout<< setw(4) << "{" << Board[i][j].first -> toInt() << " " << setw(3)<< Board[i][j].second << "}";//Orig1: 4
+                //Orig2: 3
             }
             cout << endl;
         }
@@ -44,14 +48,14 @@ private:
         }
     }
 
-    bool CheckIfTargetIsUnoccupied(int check_row, int check_col, vector<vector <pair <Player *, int> > > & Board) const {
+    bool CheckIfTargetIsUnoccupied(int check_row, int check_col, vector<vector <pair <Player *, int>>> & Board) const {
         if(Board[check_row][check_col].first->toInt() == 0){
             return true;
         }
         return false;
     }
 
-    bool CheckIfSingleAllied(int player_row, int player_col, vector<vector <pair <Player *, int> > > & Board) const {
+    bool CheckIfSingleAllied(int player_row, int player_col, vector<vector <pair <Player *, int>>> & Board) const {
         if(Board[player_row][player_col].first == this){
             return true;
         }
@@ -73,7 +77,7 @@ private:
         return false;
     }
 
-    bool CheckIfBothOwner(int player_row, int player_col, int check_row, int check_col, vector<vector <pair <Player *, int> > > & Board) const {
+    bool CheckIfBothOwner(int player_row, int player_col, int check_row, int check_col, vector<vector <pair <Player *, int>>> & Board) const {
         //you can use this to both check if it's an "allied" province or if it's an enemy province
         //Useful for Phase 3 of fortifying
         if(Board[player_row][player_col].first == Board[check_row][check_col].first){
@@ -90,7 +94,7 @@ private:
         return false;
     }
 //THIS IS BUGGED HOLY
-    bool CheckIfExistingPath(int first_row, int first_col, int second_row, int second_col, vector<vector <pair <Player *, int> > > & Board){
+    bool CheckIfExistingPath(int first_row, int first_col, int second_row, int second_col, vector<vector <pair <Player *, int>>> & Board){
         //Cant reinforce to the same exact province
         //check CheckIfBothOwner()
         //Make more efficient just by checking to see if theyre directly adjacent first
@@ -119,9 +123,9 @@ private:
         }
     }
 
-//THESE ARE BUGGED
+
 //WE GOTTA DECONSTRUCT THE BOARD AT THE END!!!!!
-    bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, vector<vector <pair <Player *, int> > > Board){
+    bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, vector<vector <pair <Player *, int>>> Board){
 
         if (flag){
             cout << "flag case hit!" << endl;
@@ -164,7 +168,7 @@ private:
         }
     }
 
-    bool ValidTroopMove(int row_1, int col_1, int amount, vector<vector <pair <Player *, int> > > Board) const{
+    bool ValidTroopMove(int row_1, int col_1, int amount, vector<vector <pair <Player *, int>>> Board) const{
         if (amount > (Board[row_1][col_1].second - 1)){
             return false;
         }
@@ -231,7 +235,7 @@ public:
         return ss.str();
     }
 
-    void GameStartDeploy(int & total_provinces, vector<vector <pair <Player *, int> > > & Board){
+    void GameStartDeploy(int & total_provinces, vector<vector <pair <Player *, int>>> & Board){
         bool deployment = true;
         int player_row;
         int player_col;
@@ -256,7 +260,7 @@ public:
         printBoard(Board);
     }
 
-    void TakeTurn(vector<vector <pair <Player *, int> > > & Board){
+    void TakeTurn(vector<vector <pair <Player *, int>>> & Board){
         CollectTroops();
 
         //Deploying Troops
@@ -273,7 +277,7 @@ public:
         cout<< "End of Player #" << player_num <<"'s turn." << endl;
     }
 
-    void DeployTroops(vector<vector <pair <Player *, int> > > & Board){
+    void DeployTroops(vector<vector <pair <Player *, int>>> & Board){
         int player_in_row;
         int player_in_col;
         int player_in_troops;
@@ -316,7 +320,7 @@ public:
 
     }
 
-    void PlayerAttack(vector<vector <pair <Player *, int> > > & Board){
+    void PlayerAttack(vector<vector <pair <Player *, int>>> & Board){
         int player_choice;
         int player_row;
         int player_col;
@@ -367,7 +371,7 @@ public:
 
     }
 
-    void PlayerFortify(vector<vector <pair <Player *, int> > > & Board){
+    void PlayerFortify(vector<vector <pair <Player *, int>>> & Board){
 //// ACTUALLY IMPLEMENT THIS
         int row_1;
         int col_1;
