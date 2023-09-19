@@ -7,7 +7,7 @@ using namespace std;
 //REMEMBER TO FIX IF NEEDED
 
 
-void printBoard(vector<vector <pair <Player *, int>>> & Board){
+void printBoard(vector<vector <pair <Player *, int> > > & Board){
     // printing the col key:
     cout << " ";
     for (int i = 0; i < STAND_COL; i++){
@@ -27,7 +27,7 @@ void printBoard(vector<vector <pair <Player *, int>>> & Board){
 //Here begins the great change!!
 int main(){
 
-    vector<vector <pair <Player *, int>>> Board;
+    vector<vector <pair <Player *, int> > > Board;
 
     Player * def_player = new Player(0,0);
 
@@ -36,7 +36,7 @@ int main(){
 
     cout << "Generating Game Board..." << endl;
     for(int i=0; i< STAND_ROW; i++) {
-        Board.push_back(vector<pair<Player *, int>>());
+        Board.push_back(vector<pair<Player *, int> >());
         for (int j = 0; j < STAND_COL; j++) {
             Board[i].push_back(make_pair(def_player, 0));
         }
