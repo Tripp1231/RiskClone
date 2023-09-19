@@ -10,6 +10,8 @@ using namespace std;
 #include <vector>
 #include <set>
 #include <unordered_set>
+#include <iomanip>
+
 const int STAND_ROW = 4;
 const int STAND_COL = 4;
 
@@ -18,18 +20,20 @@ class Player{
 
 private:
 
-    void printBoard(vector<vector <pair <Player *, int>>> & Board) const{
-        // printing the col key:
-        cout << " ";
-        for (int i = 0; i < STAND_COL; i++){
-            cout << "      " << "[" << i << "]" << "";
+    void printBoard(vector<vector <pair <Player *, int>>> & Board){
+        cout << setw(9) << "[" << 0 << "]";// Orig: 9
+        int stand_num = 8; //orig: 8
+        cout << setw(0);
+        for(int i = 1; i < STAND_COL; i++){
+            cout << setw(stand_num) << "[" << i << "]";
         }
-        cout << endl;
 
-        for (int i = 0; i < STAND_ROW; i++){
-            cout << "[" << i << "]";
-            for(int j = 0; j < STAND_COL; j++){
-                cout << "   <" << Board[i][j].first->toInt() << "," << Board[i][j].second << "> ";
+        cout << endl;
+        for(int i = 0; i < STAND_ROW; i++){
+            cout<< setw(0) << "[" << i << "]";
+            for(int j = 0; j <STAND_COL; j++){
+                cout<< setw(4) << "{" << Board[i][j].first -> toInt() << " " << setw(3)<< Board[i][j].second << "}";//Orig1: 4
+                //Orig2: 3
             }
             cout << endl;
         }
@@ -119,7 +123,7 @@ private:
         }
     }
 
-//THESE ARE BUGGED
+
 //WE GOTTA DECONSTRUCT THE BOARD AT THE END!!!!!
     bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, vector<vector <pair <Player *, int>>> Board){
 

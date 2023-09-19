@@ -1,14 +1,11 @@
       (Ordered by importance)
            TO DO BOARD
-    Fork to change what is contained within our pairs
-        A Player Object should be contained in the .first so that they can be edited
-        Make attacking easier, makes losing and winning more clear
-    Fixing the Output of CheckIfExistingPath
     Winning/Losing/Game-ending needs to be implemented
-    PrintBoard() gets ugly quick
-        Fix it so it looks better line to line even if they contain varying numbers
+    With the changes made ot printBoard() there needs to be a max number of troops at a province
+        Cannot be greater than 999 troops at a province, although rare still possible
     Figure out how to clear the console in CLion it looks terrible after a while
     Risk Card system needs implementation
+    Need to implement risks attacking and defending dice rolling
 
 
              FUN IDEA BOARD
@@ -23,6 +20,7 @@
     Reworking Risks attacking system to reward aggression
         Coin Flipping, troops are rewarded at the end of a turn not the beginning
             Fundamentally changes Risk
+            WideRisk -- Risk is currently Tall
     How could an Adjacency matrix be used/is it better to use it?
     Implementing different Factions
         Child of Player.h?
