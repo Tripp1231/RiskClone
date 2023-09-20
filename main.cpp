@@ -43,14 +43,13 @@ int main(){
 
     printBoard(Board);
 
-    //Temporary Comment out to test printboard
     cout << "How many players?: " << endl;
     int num_players;
     cin >> num_players;
 
 
     //Tests to make sure there are more than two players
-    while (num_players > 6){
+    while (num_players > 6 ||  num_players <= 2){
         cout << "Error: Cannot have more than 6 Players. Reenter." << endl;
         cin >> num_players;
     }
@@ -78,16 +77,14 @@ int main(){
         players_in_game[i].DeployTroops(Board);
     }
 
-    players_in_game[0].TakeTurn(Board);
-
     printBoard(Board);
 
     //Main Game Loop
-//    while (true){
-//        for (int i = 0; i < players_in_game.size(); i++){
-//            players_in_game[i].TakeTurn(Board);
-//        }
-//    }
+    while (players_in_game.size() > 1){
+        for (int i = 0; i < players_in_game.size(); i++){
+            players_in_game[i].TakeTurn(Board);
+        }
+    }
 
 
 }
