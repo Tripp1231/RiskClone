@@ -12,8 +12,8 @@ using namespace std;
 #include <unordered_set>
 #include <iomanip>
 
-const int STAND_ROW = 4;
-const int STAND_COL = 4;
+const int STAND_ROW = 2;
+const int STAND_COL = 2;
 
 
 class Player{
@@ -35,7 +35,7 @@ private:
                 cout<< setw(4) << "{" << Board[i][j].first -> toInt() << " " << setw(3)<< Board[i][j].second << "}";//Orig1: 4
                 //Orig2: 3
             }
-            cout << endl;
+            cout << endl << endl;
         }
     }
 
@@ -93,7 +93,7 @@ private:
         cerr << "There are not enough troops to attack." << endl;
         return false;
     }
-//THIS IS BUGGED HOLY
+
     bool CheckIfExistingPath(int first_row, int first_col, int second_row, int second_col, vector<vector <pair <Player *, int>>> & Board){
         //Cant reinforce to the same exact province
         //check CheckIfBothOwner()
@@ -122,7 +122,6 @@ private:
             return CheckPathHelper(first_row, first_col, second_row, second_col, flag, Board);
         }
     }
-
 
 //WE GOTTA DECONSTRUCT THE BOARD AT THE END!!!!!
     bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, vector<vector <pair <Player *, int>>> Board){
@@ -175,8 +174,6 @@ private:
         return true;
     }
 
-    //Gotta redo at least the overloaded CheckIfValid
-    //Ahhh we have a discrepency between how the check if valids actually work...standardize
     bool CheckIfValid(int row, int col){
         if ( (row < STAND_ROW && row >= 0 ) && (col < STAND_COL && col >= 0) ){
             return true;
@@ -193,13 +190,12 @@ private:
 
     }
 
-
     int const BASE_TROOP_INCOME = 3;
 
 public:
     int player_num = 0;
     int troop_deploy = 35;
-    unordered_set<pair <Player, int> *> my_pairs;
+    unordered_set<pair <Player *, int> *> my_pairs;
     const int PATH = -10;
     const int TEMP = -20;
 
@@ -249,6 +245,7 @@ public:
                 //If the Province targeted is unoccupied
                 Board[player_row][player_col].first = this;
                 Board[player_row][player_col].second += 1;
+                my_pairs.insert(&Board[player_row][player_col]);//Very important
                 troop_deploy--;
                 total_provinces--;
                 deployment = false;
@@ -260,11 +257,13 @@ public:
         printBoard(Board);
     }
 
-    void TakeTurn(vector<vector <pair <Player *, int>>> & Board){
+    bool TakeTurn(vector<vector <pair <Player *, int>>> & Board){
         CollectTroops();
 
         //Deploying Troops
-        DeployTroops(Board);
+        if (!DeployTroops(Board)){
+            return false;
+        }
 
         //Attacking Enemy Provinces
         PlayerAttack(Board);
@@ -275,9 +274,17 @@ public:
         printBoard(Board);
 
         cout<< "End of Player #" << player_num <<"'s turn." << endl;
+        return true;
+
+
     }
 
-    void DeployTroops(vector<vector <pair <Player *, int>>> & Board){
+    bool DeployTroops(vector<vector <pair <Player *, int>>> & Board){
+
+        if (my_pairs.empty()){
+            return false;
+        }
+
         int player_in_row;
         int player_in_col;
         int player_in_troops;
@@ -293,23 +300,21 @@ public:
                 cin >> player_in_troops;
             }
 
-
             if(CheckIfValid(player_in_row, player_in_col) &&
                CheckIfSingleAllied(player_in_row, player_in_col, Board)){
 
                 if (player_in_troops > troop_deploy){//Case to make sure not negative
                     Board[player_in_row][player_in_col].second += troop_deploy;
                     troop_deploy = 0;
-                    return;
+                    return true;
                 }
                 else {
                     troop_deploy -= player_in_troops;
                     Board[player_in_row][player_in_col].second += player_in_troops;
+                    return true;//This needs to be changed in case they want to place in multiple different places
                 }
 
             }
-
-                //case if player did not choose an allied province
             else{
                 cout << "Error: Enter the correct coordinates of a province you own. Ex: 1 2 6."<< endl;
             }
@@ -321,6 +326,7 @@ public:
     }
 
     void PlayerAttack(vector<vector <pair <Player *, int>>> & Board){
+
         int player_choice;
         int player_row;
         int player_col;
@@ -346,28 +352,25 @@ public:
 
                 Board[enemy_row][enemy_col].second = left_over_troop - 1;
 
+                Board[enemy_row][enemy_col].first->my_pairs.erase(&Board[enemy_row][enemy_col]);
+
+                my_pairs.insert(&Board[enemy_row][enemy_col]);
+
                 Board[enemy_row][enemy_col].first = this;
 
                 cout << "Player #" << player_num << " has taken over [" << enemy_row << "] [" << enemy_col << "]!" << endl;
-                //printBoard(Board);
-
-
+                printBoard(Board);
+                cout << "Player #"<< player_num << ", Attack [1] or End Attack Phase [3]" << endl;
+                cin >> player_choice;
             }
+
             else {
-                cout << "Please select new provinces." << endl;
+                cout << "An Error may have occurred, Please select new provinces." << endl;
+                cout << "Player #"<< player_num << ", Attack [1] or End Attack Phase [3]" << endl;
+                cin >> player_choice;
             }
-
-            cout << "Player #"<< player_num << ", Attack [1] or End Turn [3]" << endl;
-            cin >> player_choice;
 
         }
-
-
-        //Figure out how to clear the terminal
-        //"End of Player player_num turn"
-        //clear()
-        printBoard(Board);
-
 
     }
 

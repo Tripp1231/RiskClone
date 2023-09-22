@@ -1,9 +1,8 @@
 #include <iostream>
-#include <sstream>
-#include <string>
 #include <utility>
 #include "Player.h"
 #include <iomanip>
+#include <list>
 using namespace std;
 
 void printBoard(vector<vector <pair <Player *, int>>> & Board){
@@ -48,24 +47,23 @@ int main(){
     cin >> num_players;
 
 
-    //Tests to make sure there are more than two players
     while (num_players > 6 ||  num_players <= 2){
         cout << "Error: Cannot have more than 6 Players. Reenter." << endl;
         cin >> num_players;
     }
 
-    vector<Player> players_in_game; // This will handle player turn order and how many players there are
+    list<Player*> players_in_game; // This will handle player turn order and how many players there are
 
     for(int i = 0; i < num_players; i++){
-        Player new_player(i + 1, num_players);
+        Player * new_player = new Player(i + 1, num_players);
         players_in_game.push_back(new_player);
     }
 
 
     //Initial Deployment of Troops
     while (total_provinces > 0) {//decrementer handled in GameStartDeploy()
-        for (int i = 0; i < num_players; i++) {
-            players_in_game[i].GameStartDeploy(total_provinces, Board);
+        for (list<Player*>::iterator it = players_in_game.begin(); it != players_in_game.end(); it++) {
+            (*it)->GameStartDeploy(total_provinces, Board);
             if (total_provinces == 0){
                 break;
             }
@@ -73,18 +71,21 @@ int main(){
     }
 
     //Full Unloading of Troops
-    for (int i =0; i < num_players; i++){
-        players_in_game[i].DeployTroops(Board);
+    for (list<Player*>::iterator it = players_in_game.begin(); it != players_in_game.end(); it++){
+        (*it)->DeployTroops(Board);
     }
 
     printBoard(Board);
-
+//This handles losing on the next players turn instead of on their turn. Does this work?
     //Main Game Loop
-    while (players_in_game.size() > 1){
-        for (int i = 0; i < players_in_game.size(); i++){
-            players_in_game[i].TakeTurn(Board);
+    while (players_in_game.size() > 1) {
+        auto it = players_in_game.begin();
+        while (it != players_in_game.end()) {
+            if (!(*it)->TakeTurn(Board)) {
+                it = players_in_game.erase(it);
+            } else {
+                it++;
+            }
         }
     }
-
-
 }
