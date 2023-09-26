@@ -31,7 +31,6 @@ int main(){
     Player * def_player = new Player(0,0);
 
     int total_provinces = STAND_ROW * STAND_COL;
-
     cout << "Generating Game Board..." << endl;
     for(int i=0; i< STAND_ROW; i++) {
         Board.push_back(vector<pair<Player *, int>>());
@@ -62,7 +61,7 @@ int main(){
 
     //Initial Deployment of Troops
     while (total_provinces > 0) {//decrementer handled in GameStartDeploy()
-        for (list<Player*>::iterator it = players_in_game.begin(); it != players_in_game.end(); it++) {
+        for (auto it = players_in_game.begin(); it != players_in_game.end(); it++) {
             (*it)->GameStartDeploy(total_provinces, Board);
             if (total_provinces == 0){
                 break;
@@ -70,22 +69,34 @@ int main(){
         }
     }
 
+    delete def_player;
+
+
     //Full Unloading of Troops
-    for (list<Player*>::iterator it = players_in_game.begin(); it != players_in_game.end(); it++){
+    for (auto it = players_in_game.begin(); it != players_in_game.end(); it++){
         (*it)->DeployTroops(Board);
     }
 
     printBoard(Board);
-//This handles losing on the next players turn instead of on their turn. Does this work?
     //Main Game Loop
     while (players_in_game.size() > 1) {
         auto it = players_in_game.begin();
         while (it != players_in_game.end()) {
             if (!(*it)->TakeTurn(Board)) {
+                delete (*it);
                 it = players_in_game.erase(it);
             } else {
                 it++;
             }
+        }
+    }
+
+    //Deleting all of our pointers
+    auto it = players_in_game.begin();
+    delete *it;
+    for(int i=0; i< STAND_ROW; i++) {
+        for (int j = 0; j < STAND_COL; j++) {
+            delete Board[i][j].first;
         }
     }
 }

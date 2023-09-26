@@ -12,8 +12,8 @@ using namespace std;
 #include <unordered_set>
 #include <iomanip>
 
-const int STAND_ROW = 2;
-const int STAND_COL = 2;
+const int STAND_ROW = 4;
+const int STAND_COL = 4;
 
 
 class Player{
@@ -32,8 +32,8 @@ private:
         for(int i = 0; i < STAND_ROW; i++){
             cout<< setw(0) << "[" << i << "]";
             for(int j = 0; j <STAND_COL; j++){
-                cout<< setw(4) << "{" << Board[i][j].first -> toInt() << " " << setw(3)<< Board[i][j].second << "}";//Orig1: 4
-                //Orig2: 3
+                cout<< setw(4) << "{" << Board[i][j].first -> toInt() << " " << setw(3)<< Board[i][j].second << "}";
+
             }
             cout << endl << endl;
         }
@@ -95,10 +95,6 @@ private:
     }
 
     bool CheckIfExistingPath(int first_row, int first_col, int second_row, int second_col, vector<vector <pair <Player *, int>>> & Board){
-        //Cant reinforce to the same exact province
-        //check CheckIfBothOwner()
-        //Make more efficient just by checking to see if theyre directly adjacent first
-
 
         if(!CheckIfValid(first_row, first_col, second_row, second_col)){
             cout << "Some of the coordinates may be invalid." << endl;
@@ -123,16 +119,18 @@ private:
         }
     }
 
-//WE GOTTA DECONSTRUCT THE BOARD AT THE END!!!!!
+    //WE GOTTA DECONSTRUCT THE BOARD AT THE END!!!!!
+    //What if we re-write this where we use the memory codes sorted into a path and Temp sets that we look through?
+
     bool CheckPathHelper(int cur_row, int cur_col,  int second_row, int second_col, bool & flag, vector<vector <pair <Player *, int>>> Board){
 
-        if (flag){
+        if(flag){
             cout << "flag case hit!" << endl;
             return true;
         }
 
         //Preliminary Check to make sure that coords are even valid
-        if(!CheckIfValid(cur_row, cur_col)){ //||Board[cur_row][cur_col].second == TEMP){
+        if(!CheckIfValid(cur_row, cur_col)){
             return false;
         }
 
@@ -151,8 +149,7 @@ private:
             return true;
         }
 
-        //need to pass in the board because we dont want to call this on provinces that aren't owned
-
+        //need to pass in the board because we don't want to call this on provinces that aren't owned
         Board[cur_row][cur_col].second = PATH;
         if(CheckPathHelper(cur_row - 1, cur_col, second_row, second_col, flag, Board)
            || CheckPathHelper(cur_row + 1, cur_col, second_row, second_col, flag, Board)
@@ -200,9 +197,8 @@ public:
     const int TEMP = -20;
 
 
-    Player(int player_slot=0, int player_count=0){//int faction
+    Player(int player_slot=0, int player_count=0){
         player_num = player_slot;
-        //faction_choice = faction;
         for (int i = 3; i < player_count; i++){
             troop_deploy -= 5;
         }
@@ -211,7 +207,9 @@ public:
         }
     }
 
-    ~Player(){}
+    ~Player(){
+        my_pairs.clear();
+    }
 
     bool operator==(Player &rhs){
         if (this == &rhs){
@@ -227,7 +225,7 @@ public:
 
     string toString() const{
         stringstream ss;
-        ss << "Player #" << player_num;// << ", Faction Choice: " << faction_choice;
+        ss << "Player #" << player_num;
         return ss.str();
     }
 
@@ -375,7 +373,7 @@ public:
     }
 
     void PlayerFortify(vector<vector <pair <Player *, int>>> & Board){
-//// ACTUALLY IMPLEMENT THIS
+
         int row_1;
         int col_1;
         int row_2;
