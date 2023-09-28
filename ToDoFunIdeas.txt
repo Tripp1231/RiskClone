@@ -1,6 +1,5 @@
       (Ordered by importance)
            TO DO BOARD
-    Winning/Losing/Game-ending needs to be implemented
     With the changes made ot printBoard() there needs to be a max number of troops at a province
         Cannot be greater than 999 troops at a province, although rare still possible
     Figure out how to clear the console in CLion it looks terrible after a while

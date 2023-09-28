@@ -41,7 +41,7 @@ private:
 
     void CollectTroops(){
         if (my_pairs.size() / 3 > BASE_TROOP_INCOME ){
-            troop_deploy += (my_pairs.size() /3);
+            troop_deploy += (my_pairs.size()/3);
         }
         else {
             troop_deploy += BASE_TROOP_INCOME;
@@ -63,7 +63,7 @@ private:
     }
 
     bool CheckAdjacency(int row_1, int col_1, int row_2, int col_2) const{
-        //North Movement
+              //North Movement
         if(   (((row_1 - 1)== row_2) && (col_1 == col_2))
               //South Movement
               || (((row_1 + 1) == row_2) && (col_1 == col_2))
@@ -234,7 +234,6 @@ public:
         int player_row;
         int player_col;
         while (deployment) {
-
             cout << "Player #" << player_num << " place 1 troop." << endl;
             cout << "Input the coordinates in Row Column form Ex: 1 2 " << endl;
             cin >> player_row >> player_col;
@@ -273,8 +272,6 @@ public:
 
         cout<< "End of Player #" << player_num <<"'s turn." << endl;
         return true;
-
-
     }
 
     bool DeployTroops(vector<vector <pair <Player *, int>>> & Board){
